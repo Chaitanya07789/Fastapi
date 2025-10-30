@@ -17,9 +17,22 @@ def create_blog(request:schemas.Blog, db:Session = Depends(get_db)):
     return new_blog
 
 @app.get("/blogs")
-def all_blogs(db:Session=Depends(get_db)):
+def get_all_blogs(db:Session=Depends(get_db)):
     blogs = db.query(model.Blog).all()
     return blogs
+
+@app.post("/user")
+def create_user(request:schemas.User, db:Session = Depends(get_db)):
+    new_user = model.User(username=request.username, email=request.email, password= request.password)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
+@app.get("/user")
+def get_all_user(db:Session=Depends(get_db)):
+    users = db.query(model.User).all()
+    return users
 
 
 if __name__ == "__main__":
